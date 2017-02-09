@@ -1,0 +1,126 @@
+---
+swagger: "2.0"
+info:
+  description: "This is an API which allows for managing a list of files to download.\
+    \ \n"
+  version: "0.0.1"
+  title: "DLScheduler API"
+consumes:
+- "application/json"
+- "multipart/form-data"
+produces:
+- "application/json"
+paths:
+  /file/{url}:
+    get:
+      tags:
+      - "File"
+      summary: "Gets information on a file given a url."
+      operationId: "fileUrlGET"
+      parameters:
+      - name: "url"
+        in: "path"
+        description: "Url of the file"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Return file information"
+          schema:
+            $ref: "#/definitions/file"
+        404:
+          description: "File does not exist"
+        422:
+          description: "Unprocessable Entity"
+      x-swagger-router-controller: "File"
+    put:
+      tags:
+      - "File"
+      summary: "Create or update the file information"
+      operationId: "fileUrlPUT"
+      parameters:
+      - name: "url"
+        in: "path"
+        description: "Unique url of the file"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Platform updated"
+        201:
+          description: "Platform created"
+        400:
+          description: "Bad Request"
+        401:
+          description: "Missing file for platform"
+        422:
+          description: "Unprocessable Entity"
+      x-swagger-router-controller: "File"
+    delete:
+      tags:
+      - "File"
+      summary: "Remove a file information."
+      operationId: "fileUrlDELETE"
+      parameters:
+      - name: "url"
+        in: "path"
+        description: "Url of the file to delete"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "File was deleted"
+        404:
+          description: "File with the url does not exist"
+        422:
+          description: "Unprocessable Entity"
+      x-swagger-router-controller: "File"
+  /files:
+    get:
+      tags:
+      - "File"
+      summary: "Get all files which match the query."
+      operationId: "filesGET"
+      parameters: []
+      responses:
+        200:
+          description: "Return files meeting search criteria"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/file"
+        422:
+          description: "Unprocessable Entity"
+      x-swagger-router-controller: "File"
+definitions:
+  file:
+    type: "object"
+    required:
+    - "timeStartDownload"
+    - "url"
+    properties:
+      url:
+        type: "string"
+        example: "http://www.youtube.com/myfile.mp4"
+        description: "Url of file to download"
+        readOnly: true
+      fileName:
+        type: "string"
+        example: "/volume1/files/myfile.mp4"
+        description: "The full path to the file"
+        readOnly: true
+      status:
+        type: "string"
+        example: "Downloaded"
+        description: "Icon file for app."
+        readOnly: true
+      progress:
+        type: "string"
+        example: "100"
+        description: "Percentage of file downloaded"
+        readOnly: true
+      timeStartDownload:
+        type: "string"
+        format: "date-time"
+        example: "2015-07-07T15:49:51.230+02:00"
+        description: "Last time this platform was updated"
